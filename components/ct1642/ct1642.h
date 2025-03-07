@@ -24,7 +24,7 @@ class CT1642Display : public PollingComponent {
 
     void setup() override;
     void dump_config() override;
-    float get_setup_priority();
+    float get_setup_priority() const;
     void update();
 
     void set_length(uint8_t length) {length_ = length;}
