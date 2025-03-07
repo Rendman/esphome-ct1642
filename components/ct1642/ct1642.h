@@ -24,8 +24,8 @@ class CT1642Display : public PollingComponent {
 
     void setup() override;
     void dump_config() override;
-    float get_setup_priority() const override {return 0;}
-    void update() override {}
+    float get_setup_priority();
+    void update();
 
     void set_length(uint8_t length) {length_ = length;}
     void set_clk_pin(GPIOPin *pin) {clk_pin_ = pin;}
