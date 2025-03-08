@@ -172,6 +172,7 @@ void CT1642Display::setup() {
     //}
 
     //this->buffer_[0] = data;
+    return 0;
   }
 
   void CT1642Display::send_byte_to_address(uint8_t byte, uint8_t address)
