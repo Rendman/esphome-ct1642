@@ -164,12 +164,12 @@ void CT1642Display::setup() {
   {
     uint8_t data = CT1642_UNKNOWN_CHAR;
 
-    if (*str >= ' ' && *str <= '~') {
-      data = progmem_read_byte(&CT1642_ASCII_TO_RAW[*str - 32]);  // subract 32 to account for ASCII offset
-      ESP_LOGW(TAG, "got raw value", data);
-    } else if (data == CT1642_UNKNOWN_CHAR) {
+    //if (*str >= ' ' && *str <= '~') {
+    //  data = progmem_read_byte(&CT1642_ASCII_TO_RAW[*str - 32]);  // subract 32 to account for ASCII offset
+    //  ESP_LOGW(TAG, "got raw value", data);
+    //} else if (data == CT1642_UNKNOWN_CHAR) {
       //ESP_LOGW(TAG, "Encountered character '%c' with no TM1638 representation while translating string!", *str);
-    }
+    //}
 
     //this->buffer_[0] = data;
   }
