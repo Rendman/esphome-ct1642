@@ -141,8 +141,8 @@ void CT1642Display::setup() {
   }
 
   void CT1642Display::update() {
-  //  for (uint8_t &i : this->buffer_)
-  //    i = 0b11111110;
+    for (uint8_t &i : this->buffer_)
+      i = 0b11111110;
     if (this->writer_.has_value())
       (*this->writer_)(*this);
     this->display();
@@ -158,6 +158,7 @@ void CT1642Display::setup() {
     this->send_byte_to_address(buffer_[2], 2);
     this->send_byte_to_address(buffer_[3], 3);
     
+    delay(10);
   }
 
   uint8_t CT1642Display::print(uint8_t pos, const char *str)
@@ -241,8 +242,6 @@ void CT1642Display::setup() {
     this->clk_pin_->digital_write(false);
     this->data_pin_->digital_write(false);
     this->data_pin_->digital_write(true);
-
-    delay(2);
   }
 }
 }
