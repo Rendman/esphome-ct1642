@@ -155,8 +155,8 @@ void CT1642Display::setup() {
 
   void CT1642Display::loop() {
     this->send_byte_to_address(buffer_[0], 0);
-    //this->send_byte_to_address(buffer_[1], 1);
-    //this->send_byte_to_address(buffer_[2], 2);
+    this->send_byte_to_address(buffer_[1], 1);
+    this->send_byte_to_address(buffer_[2], 2);
     //this->send_byte_to_address(buffer_[3], 3);
 
     //delay(1);
