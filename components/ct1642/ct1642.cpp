@@ -119,10 +119,10 @@ const uint8_t CT1642_ASCII_TO_RAW[] PROGMEM = {
 void CT1642Display::setup() {
     ESP_LOGCONFIG(TAG, "Setting up CT1642...");
   
-    this->clk_pin_->setup();                // OUTPUT
-    this->clk_pin_->digital_write(false);   // LOW
     this->data_pin_->setup();               // OUTPUT
     this->data_pin_->digital_write(false);  // LOW
+    this->clk_pin_->setup();                // OUTPUT
+    this->clk_pin_->digital_write(false);   // LOW
   
     for (int i=0; i<4; i++)
     {
@@ -177,11 +177,36 @@ void CT1642Display::setup() {
 
   void CT1642Display::send_byte_to_address(uint8_t byte, uint8_t address)
   {
+    uint8_t digit = 0;
+    switch (address)
+    {
+      case 1: {
+        digit = 0x7f;
+        break;
+      }
+      case 2: {
+        digit = 0xbf;
+        break;
+      }
+      case 3: {
+        digit = 0xdf;
+        break;
+      }
+      case 4: {
+        digit = 0xef;
+        break;
+      }
+      default: {
+        digit = 0xff;
+      }
+
+    }
+        
     // Start by sending the four address bits
     for (int i=0; i<4; i++)
     {
       this->clk_pin_->digital_write(false);
-      if ((address << i) & 0x80)
+      if ((digit << i) & 0x80)
       {
         this->data_pin_->digital_write(true);
       } else {
