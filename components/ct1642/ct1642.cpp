@@ -124,6 +124,11 @@ void CT1642Display::setup() {
     this->data_pin_->setup();               // OUTPUT
     this->data_pin_->digital_write(false);  // LOW
   
+    for (int i=0; i<4; i++)
+    {
+      this->buffer_[i] = 0;
+    }
+
     this->display();
   }
 
@@ -165,7 +170,7 @@ void CT1642Display::setup() {
       ESP_LOGW(TAG, "Encountered character '%c' with no TM1638 representation while translating string!", *str);
     }
 
-    buffer_[0] = data;
+    this->buffer_[0] = data;
   }
 
   void CT1642Display::send_byte_to_address(uint8_t byte, uint8_t address)
