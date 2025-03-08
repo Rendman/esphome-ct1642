@@ -180,19 +180,19 @@ void CT1642Display::setup() {
     uint8_t digit = 0;
     switch (address)
     {
-      case 1: {
+      case 0: {
         digit = 0x7f;
         break;
       }
-      case 2: {
+      case 1: {
         digit = 0xbf;
         break;
       }
-      case 3: {
+      case 2: {
         digit = 0xdf;
         break;
       }
-      case 4: {
+      case 3: {
         digit = 0xef;
         break;
       }
