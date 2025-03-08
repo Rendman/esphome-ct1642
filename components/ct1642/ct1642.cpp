@@ -9,6 +9,8 @@ namespace ct1642 {
 static const char *const TAG = "display.ct1642";
 const uint8_t CT1642_UNKNOWN_CHAR = 0b11111111;
 
+const uint8_t CT1642_ASCII_TO_RAW[];
+
 void CT1642Display::setup() {
     ESP_LOGCONFIG(TAG, "Setting up CT1642...");
   
@@ -106,7 +108,7 @@ void CT1642Display::setup() {
   }
 
 
-  //
+//
 //      A
 //     ---
 //  F |   | B
