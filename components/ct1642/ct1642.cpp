@@ -158,6 +158,8 @@ void CT1642Display::setup() {
     this->send_byte_to_address(buffer_[1], 1);
     this->send_byte_to_address(buffer_[2], 2);
     this->send_byte_to_address(buffer_[3], 3);
+
+    delay(20);
   }
 
   uint8_t CT1642Display::print(uint8_t pos, const char *str)
@@ -242,7 +244,7 @@ void CT1642Display::setup() {
     this->data_pin_->digital_write(false);
     this->data_pin_->digital_write(true);
 
-    delay(3);
+    delay(1);
   }
 }
 }
