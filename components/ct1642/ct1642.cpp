@@ -145,6 +145,7 @@ void CT1642Display::setup() {
     if (this->writer_.has_value())
       (*this->writer_)(*this);
       this->send_byte_to_address(buffer_[0], 0);
+      this->send_byte_to_address(buffer_[1], 1);
   }
 
   float CT1642Display::get_setup_priority() const { return setup_priority::PROCESSOR; }
