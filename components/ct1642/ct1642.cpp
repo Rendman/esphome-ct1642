@@ -241,7 +241,7 @@ void CT1642Display::setup() {
     this->data_pin_->digital_write(false);
     this->data_pin_->digital_write(true);
 
-    delay(10);
+    delay(100);
   }
 }
 }
