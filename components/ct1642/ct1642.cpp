@@ -48,6 +48,19 @@ void CT1642Display::setup() {
     
   }
 
+  uint8_t CT1642Display::print(uint8_t pos, const char *str)
+  {
+    uint8_t data = CT1642_UNKNOWN_CHAR;
+
+    if (*str >= ' ' && *str <= '~') {
+      data = progmem_read_byte(&CT1642_ASCII_TO_RAW[*str - 32]);  // subract 32 to account for ASCII offset
+    } else if (data == CT1642_UNKNOWN_CHAR) {
+      ESP_LOGW(TAG, "Encountered character '%c' with no TM1638 representation while translating string!", *str);
+    }
+
+    buffer_[0] = data;
+  }
+
   void CT1642Display::send_byte_to_address(uint8_t byte, uint8_t address)
   {
     // Start by sending the four address bits
