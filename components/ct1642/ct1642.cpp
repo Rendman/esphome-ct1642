@@ -126,7 +126,7 @@ void CT1642Display::setup() {
   
     for (int i=0; i<4; i++)
     {
-      this->buffer_[i] = 254;
+      this->buffer_[i] = 0b11111110;
     }
 
     this->display();
