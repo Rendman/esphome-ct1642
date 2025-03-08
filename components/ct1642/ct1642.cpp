@@ -144,7 +144,7 @@ void CT1642Display::setup() {
     
     if (this->writer_.has_value())
       (*this->writer_)(*this);
-    //this->display();
+      this->send_byte_to_address(buffer_[0], 0);
   }
 
   float CT1642Display::get_setup_priority() const { return setup_priority::PROCESSOR; }
@@ -154,9 +154,9 @@ void CT1642Display::setup() {
   }
 
   void CT1642Display::loop() {
-    this->send_byte_to_address(buffer_[0], 0);
-    this->send_byte_to_address(buffer_[1], 1);
-    this->send_byte_to_address(buffer_[2], 2);
+    //this->send_byte_to_address(buffer_[0], 0);
+    //this->send_byte_to_address(buffer_[1], 1);
+    //this->send_byte_to_address(buffer_[2], 2);
     //this->send_byte_to_address(buffer_[3], 3);
 
     //delay(1);
