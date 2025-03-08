@@ -141,8 +141,7 @@ void CT1642Display::setup() {
   }
 
   void CT1642Display::update() {
-    //for (uint8_t &i : this->buffer_)
-    //  i = 0b11111110;
+    
     if (this->writer_.has_value())
       (*this->writer_)(*this);
     this->display();
@@ -153,6 +152,10 @@ void CT1642Display::setup() {
   void CT1642Display::display() {
     ESP_LOGVV(TAG, "CT1642 Buffer %02X%02X%02X%02X", buffer_[0], buffer_[1], buffer_[2], buffer_[3]);
 
+    
+  }
+
+  void CT1642Display::loop() {
     this->send_byte_to_address(buffer_[0], 0);
     this->send_byte_to_address(buffer_[1], 1);
     this->send_byte_to_address(buffer_[2], 2);

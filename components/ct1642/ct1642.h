@@ -32,6 +32,7 @@ class CT1642Display : public PollingComponent {
     void set_data_pin(GPIOPin *pin) {data_pin_ = pin;}
 
     void display();
+    void loop() override;
 
     uint8_t print(uint8_t pos, const char *str);
 
