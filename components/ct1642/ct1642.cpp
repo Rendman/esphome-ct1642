@@ -171,7 +171,7 @@ void CT1642Display::setup() {
       //ESP_LOGW(TAG, "Encountered character '%c' with no TM1638 representation while translating string!", *str);
     }
 
-    this->buffer_[0] = data;
+    //this->buffer_[0] = data;
   }
 
   void CT1642Display::send_byte_to_address(uint8_t byte, uint8_t address)
