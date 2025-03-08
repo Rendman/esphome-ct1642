@@ -199,7 +199,6 @@ void CT1642Display::setup() {
       default: {
         digit = 0xff;
       }
-
     }
         
     // Start by sending the four address bits
@@ -227,7 +226,7 @@ void CT1642Display::setup() {
     for (int i=0; i<8; i++)
     {
       this->clk_pin_->digital_write(false);
-      if ((address << i) & 0x80)
+      if ((byte << i) & 0x80)
       {
         this->data_pin_->digital_write(true);
       } else {
