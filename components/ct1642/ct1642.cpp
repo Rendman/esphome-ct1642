@@ -126,10 +126,10 @@ void CT1642Display::setup() {
   
     for (int i=0; i<4; i++)
     {
-      this->buffer_[i] = 0b11111110;
+      this->buffer_[i] = 0;
     }
 
-    this->display();
+    //this->display();
   }
 
   void CT1642Display::dump_config() {
@@ -150,9 +150,7 @@ void CT1642Display::setup() {
   float CT1642Display::get_setup_priority() const { return setup_priority::PROCESSOR; }
 
   void CT1642Display::display() {
-    ESP_LOGVV(TAG, "CT1642 Buffer %02X%02X%02X%02X", buffer_[0], buffer_[1], buffer_[2], buffer_[3]);
-
-    
+    ESP_LOGVV(TAG, "CT1642 Buffer %02X%02X%02X%02X", buffer_[0], buffer_[1], buffer_[2], buffer_[3]); 
   }
 
   void CT1642Display::loop() {
@@ -244,7 +242,7 @@ void CT1642Display::setup() {
     this->data_pin_->digital_write(false);
     this->data_pin_->digital_write(true);
 
-    delay(1);
+    delay(3);
   }
 }
 }
