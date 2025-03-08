@@ -141,8 +141,8 @@ void CT1642Display::setup() {
   }
 
   void CT1642Display::update() {
-    for (uint8_t &i : this->buffer_)
-      i = 0b11111110;
+  //  for (uint8_t &i : this->buffer_)
+  //    i = 0b11111110;
     if (this->writer_.has_value())
       (*this->writer_)(*this);
     this->display();
