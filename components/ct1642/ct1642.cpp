@@ -9,105 +9,6 @@ namespace ct1642 {
 static const char *const TAG = "display.ct1642";
 const uint8_t CT1642_UNKNOWN_CHAR = 0b11111111;
 
-const uint8_t CT1642_ASCII_TO_RAW[];
-
-void CT1642Display::setup() {
-    ESP_LOGCONFIG(TAG, "Setting up CT1642...");
-  
-    this->clk_pin_->setup();                // OUTPUT
-    this->clk_pin_->digital_write(false);   // LOW
-    this->data_pin_->setup();               // OUTPUT
-    this->data_pin_->digital_write(false);  // LOW
-  
-    this->display();
-  }
-
-  void CT1642Display::dump_config() {
-    ESP_LOGCONFIG(TAG, "CT1642:");
-    ESP_LOGCONFIG(TAG, "  Length: %d", this->length_);
-    LOG_PIN("  CLK Pin: ", this->clk_pin_);
-    LOG_PIN("  DATA Pin: ", this->data_pin_);
-    LOG_UPDATE_INTERVAL(this);
-  }
-
-  void CT1642Display::update() {
-    for (uint8_t &i : this->buffer_)
-      i = 0;
-    if (this->writer_.has_value())
-      (*this->writer_)(*this);
-    this->display();
-  }
-
-  float CT1642Display::get_setup_priority() const { return setup_priority::PROCESSOR; }
-
-  void CT1642Display::display() {
-    ESP_LOGVV(TAG, "CT1642 Buffer %02X%02X%02X%02X", buffer_[0], buffer_[1], buffer_[2], buffer_[3]);
-
-    this->send_byte_to_address(buffer_[0], 0);
-    this->send_byte_to_address(buffer_[1], 1);
-    this->send_byte_to_address(buffer_[2], 2);
-    this->send_byte_to_address(buffer_[3], 3);
-    
-  }
-
-  uint8_t CT1642Display::print(uint8_t pos, const char *str)
-  {
-    uint8_t data = CT1642_UNKNOWN_CHAR;
-
-    if (*str >= ' ' && *str <= '~') {
-      data = progmem_read_byte(&CT1642_ASCII_TO_RAW[*str - 32]);  // subract 32 to account for ASCII offset
-    } else if (data == CT1642_UNKNOWN_CHAR) {
-      ESP_LOGW(TAG, "Encountered character '%c' with no TM1638 representation while translating string!", *str);
-    }
-
-    buffer_[0] = data;
-  }
-
-  void CT1642Display::send_byte_to_address(uint8_t byte, uint8_t address)
-  {
-    // Start by sending the four address bits
-    for (int i=0; i<4; i++)
-    {
-      this->clk_pin_->digital_write(false);
-      if ((address << i) & 0x80)
-      {
-        this->data_pin_->digital_write(true);
-      } else {
-        this->data_pin_->digital_write(false);
-      }
-      this->clk_pin_->digital_write(true);
-    }
-
-    // Empty bits next
-    for (int i=0; i<6; i++)
-    {
-      this->data_pin_->digital_write(true);
-      this->clk_pin_->digital_write(false);
-      this->clk_pin_->digital_write(true);
-    }
-
-    // Data bits last
-    for (int i=0; i<8; i++)
-    {
-      this->clk_pin_->digital_write(false);
-      if ((address << i) & 0x80)
-      {
-        this->data_pin_->digital_write(true);
-      } else {
-        this->data_pin_->digital_write(false);
-      }
-      this->clk_pin_->digital_write(true);
-    }
-
-    // Then latch the data to the output pins
-    this->data_pin_->digital_write(false);
-    this->data_pin_->digital_write(true);
-    this->clk_pin_->digital_write(false);
-    this->data_pin_->digital_write(false);
-    this->data_pin_->digital_write(true);
-  }
-
-
 //
 //      A
 //     ---
@@ -215,5 +116,100 @@ const uint8_t CT1642_ASCII_TO_RAW[] PROGMEM = {
   CT1642_UNKNOWN_CHAR,  // '~', ord 0x7E
 };
 
+void CT1642Display::setup() {
+    ESP_LOGCONFIG(TAG, "Setting up CT1642...");
+  
+    this->clk_pin_->setup();                // OUTPUT
+    this->clk_pin_->digital_write(false);   // LOW
+    this->data_pin_->setup();               // OUTPUT
+    this->data_pin_->digital_write(false);  // LOW
+  
+    this->display();
+  }
+
+  void CT1642Display::dump_config() {
+    ESP_LOGCONFIG(TAG, "CT1642:");
+    ESP_LOGCONFIG(TAG, "  Length: %d", this->length_);
+    LOG_PIN("  CLK Pin: ", this->clk_pin_);
+    LOG_PIN("  DATA Pin: ", this->data_pin_);
+    LOG_UPDATE_INTERVAL(this);
+  }
+
+  void CT1642Display::update() {
+    for (uint8_t &i : this->buffer_)
+      i = 0;
+    if (this->writer_.has_value())
+      (*this->writer_)(*this);
+    this->display();
+  }
+
+  float CT1642Display::get_setup_priority() const { return setup_priority::PROCESSOR; }
+
+  void CT1642Display::display() {
+    ESP_LOGVV(TAG, "CT1642 Buffer %02X%02X%02X%02X", buffer_[0], buffer_[1], buffer_[2], buffer_[3]);
+
+    this->send_byte_to_address(buffer_[0], 0);
+    this->send_byte_to_address(buffer_[1], 1);
+    this->send_byte_to_address(buffer_[2], 2);
+    this->send_byte_to_address(buffer_[3], 3);
+    
+  }
+
+  uint8_t CT1642Display::print(uint8_t pos, const char *str)
+  {
+    uint8_t data = CT1642_UNKNOWN_CHAR;
+
+    if (*str >= ' ' && *str <= '~') {
+      data = progmem_read_byte(&CT1642_ASCII_TO_RAW[*str - 32]);  // subract 32 to account for ASCII offset
+    } else if (data == CT1642_UNKNOWN_CHAR) {
+      ESP_LOGW(TAG, "Encountered character '%c' with no TM1638 representation while translating string!", *str);
+    }
+
+    buffer_[0] = data;
+  }
+
+  void CT1642Display::send_byte_to_address(uint8_t byte, uint8_t address)
+  {
+    // Start by sending the four address bits
+    for (int i=0; i<4; i++)
+    {
+      this->clk_pin_->digital_write(false);
+      if ((address << i) & 0x80)
+      {
+        this->data_pin_->digital_write(true);
+      } else {
+        this->data_pin_->digital_write(false);
+      }
+      this->clk_pin_->digital_write(true);
+    }
+
+    // Empty bits next
+    for (int i=0; i<6; i++)
+    {
+      this->data_pin_->digital_write(true);
+      this->clk_pin_->digital_write(false);
+      this->clk_pin_->digital_write(true);
+    }
+
+    // Data bits last
+    for (int i=0; i<8; i++)
+    {
+      this->clk_pin_->digital_write(false);
+      if ((address << i) & 0x80)
+      {
+        this->data_pin_->digital_write(true);
+      } else {
+        this->data_pin_->digital_write(false);
+      }
+      this->clk_pin_->digital_write(true);
+    }
+
+    // Then latch the data to the output pins
+    this->data_pin_->digital_write(false);
+    this->data_pin_->digital_write(true);
+    this->clk_pin_->digital_write(false);
+    this->data_pin_->digital_write(false);
+    this->data_pin_->digital_write(true);
+  }
 }
 }
